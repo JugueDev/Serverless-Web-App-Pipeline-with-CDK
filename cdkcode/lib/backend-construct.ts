@@ -1,11 +1,11 @@
-/* En este stack se crearán todos los recursos compartidos para el resto de stacks */
+/* En este construct se crearán todos los recursos asociados al backend de la aplicación */
 
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Construct,  } from 'constructs';
 import * as path from 'path';
 import * as iam from "aws-cdk-lib/aws-iam";
 
-export class BackendStack extends Construct {
+export class BackendConstruct extends Construct {
 
   constructor(scope: Construct, id: string) {
     super(scope, id);
@@ -14,7 +14,7 @@ export class BackendStack extends Construct {
     // Creamos un rol para asignarlo a la función lambda
     const lambdaRole = new iam.Role(this, "lambda-invoke-role-id", {
         assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-        roleName: "Lambda-Role",
+        roleName: "Lambda-Backend-Role",
         description: "Rol de IAM para que las funciones lambda puedan ejecutarse.",
       });
   
@@ -27,10 +27,10 @@ export class BackendStack extends Construct {
       );
 
     // Se define una función Lambda 
-    const averageLambda = new lambda.Function(this, 'average-lambda', {
+    const averageLambda = new lambda.Function(this, 'backend-average-lambda', {
         runtime: lambda.Runtime.PYTHON_3_9,
         handler: 'function.handler',
-        functionName: "average-lambda",
+        functionName: "backend-average-lambda",
         code: lambda.Code.fromAsset(path.join(__dirname, "/../../assets/backend/average")), // frombucket requires zip file
         role: lambdaRole,
       });
