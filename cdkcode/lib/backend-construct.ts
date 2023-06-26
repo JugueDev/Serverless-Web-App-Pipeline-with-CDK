@@ -29,11 +29,11 @@ export class BackendConstruct extends Construct {
       );
 
     // Se define una función Lambda 
-    const averageLambda = new lambda.Function(this, 'backend-average-lambda', {
+    const squareLambda = new lambda.Function(this, 'backend-square-lambda', {
         runtime: lambda.Runtime.PYTHON_3_9,
         handler: 'function.handler',
-        functionName: "backend-average-lambda",
-        code: lambda.Code.fromAsset(path.join(__dirname, "/../../assets/backend/average")), // frombucket requires zip file
+        functionName: "backend-square-lambda",
+        code: lambda.Code.fromAsset(path.join(__dirname, "/../../assets/backend/square")), // frombucket requires zip file
         role: lambdaRole,
       });
 
@@ -45,7 +45,7 @@ export class BackendConstruct extends Construct {
     api.root
         .addResource("api")
         .addResource("{number}")
-        .addMethod("GET", new apigw.LambdaIntegration(averageLambda));
+        .addMethod("GET", new apigw.LambdaIntegration(squareLambda));
     
     new CfnOutput(this, "ApiUrl", { value: api.url });
  
