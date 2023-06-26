@@ -3,7 +3,9 @@
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Construct,  } from 'constructs';
 import * as path from 'path';
+import { CfnOutput } from 'aws-cdk-lib';
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as apigw from 'aws-cdk-lib/aws-apigateway';
 
 export class BackendConstruct extends Construct {
 
@@ -35,6 +37,18 @@ export class BackendConstruct extends Construct {
         role: lambdaRole,
       });
 
+    // Se crea un api gateway que recibirá las peticiones al backend
+    const api = new apigw.RestApi(this, "RestApi", {
+      deploy: true
+    });
+    
+    api.root
+        .addResource("api")
+        .addResource("{number}")
+        .addMethod("GET", new apigw.LambdaIntegration(averageLambda));
+    
+    new CfnOutput(this, "ApiUrl", { value: api.url });
+ 
     
   }
 }
