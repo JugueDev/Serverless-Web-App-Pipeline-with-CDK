@@ -8,6 +8,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 
 export class BackendConstruct extends Construct {
+  public readonly api: apigw.RestApi; 
 
   constructor(scope: Construct, id: string) {
     super(scope, id);
@@ -38,17 +39,16 @@ export class BackendConstruct extends Construct {
       });
 
     // Se crea un api gateway que recibirá las peticiones al backend
-    const api = new apigw.RestApi(this, "RestApi", {
+    this.api = new apigw.RestApi(this, "RestApi", {
       deploy: true
     });
     
-    api.root
+    this.api.root
         .addResource("api")
         .addResource("{number}")
         .addMethod("GET", new apigw.LambdaIntegration(squareLambda));
     
-    new CfnOutput(this, "ApiUrl", { value: api.url });
+    new CfnOutput(this, "ApiUrl", { value: this.api.url });
  
-    
   }
 }

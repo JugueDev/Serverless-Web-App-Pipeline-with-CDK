@@ -4,10 +4,20 @@ def handler(event, context):
       - operation: -
     '''
     print(event)
-
+    body = 0
+    
+    def isNumeric(s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
+ 
+    if isNumeric(event["pathParameters"]["number"]):
+      body = float(event["pathParameters"]["number"]) * float(event["pathParameters"]["number"])
     response = {
     "statusCode": "200",
     "headers": { "table": "table"},
-    "body": "body"
+    "body": str(body)
     }   
     return response

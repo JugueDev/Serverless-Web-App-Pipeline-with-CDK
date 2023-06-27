@@ -16,7 +16,7 @@ export class FrontendConstruct extends Construct {
         accessControl: s3.BucketAccessControl.PRIVATE
         });
 
-    // Se copian los archivos frontend al bocket
+    // Se copian los archivos frontend al bucket
     new s3deploy.BucketDeployment(this, 'DeployWebsite', {
         sources: [s3deploy.Source.asset('../assets/frontend')],
         destinationBucket: this.frontendBucket,
